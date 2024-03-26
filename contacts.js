@@ -5,7 +5,7 @@ const contactsPath = path.join("db", "contacts.json");
 
 export async function listContacts() {
         const getJson = await fs.readFile(contactsPath);
-    return console.table(JSON.parse(getJson));
+    return JSON.parse(getJson);
   }
   
   export async function getContactById(contactId) {
@@ -15,23 +15,26 @@ export async function listContacts() {
     if (!find) {
        return null
     }
-    return console.log(find);
+    return find;
 }
   
   export async function removeContact(contactId) {
     const removeJsonById = await fs.readFile(contactsPath);
     const get = JSON.parse(removeJsonById)
-    const removed = get.filter((item) => item.id !== contactId);
-    if (!removed) {
-        return null
-     }
-    return console.log(fs.writeFile(contactsPath, JSON.stringify(removed)))
+    const find = get.find((item) => item.id === contactId)
+    if (!find) {
+       return null
+    }
+     const removed = get.filter((item) => item.id !== find);
+    await fs.writeFile(contactsPath, JSON.stringify(removed))
+    return removed;
   }
   
   export async function addContact(name, email, phone) {
         const addJsonById = await fs.readFile(contactsPath);
         const get = JSON.parse(addJsonById)
         const addJson = [ ...get, {id: Math.random(), name, email, phone} ];
-        return fs.writeFile(contactsPath, JSON.stringify(addJson))
+        await fs.writeFile(contactsPath, JSON.stringify(addJson))
+        return addJson
   }
 

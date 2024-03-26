@@ -12,6 +12,9 @@ export async function listContacts() {
     const getJsonById = await fs.readFile(contactsPath)
     const get = JSON.parse(getJsonById)
     const find = get.find((item) => item.id === contactId)
+    if (!find) {
+       return null
+    }
     return console.log(find);
 }
   
@@ -19,13 +22,16 @@ export async function listContacts() {
     const removeJsonById = await fs.readFile(contactsPath);
     const get = JSON.parse(removeJsonById)
     const removed = get.filter((item) => item.id !== contactId);
+    if (!removed) {
+        return null
+     }
     return console.log(fs.writeFile(contactsPath, JSON.stringify(removed)))
   }
   
   export async function addContact(name, email, phone) {
         const addJsonById = await fs.readFile(contactsPath);
         const get = JSON.parse(addJsonById)
-        const addJson = [ ...get, {name, email, phone} ];
+        const addJson = [ ...get, {id: Math.random(), name, email, phone} ];
         return fs.writeFile(contactsPath, JSON.stringify(addJson))
   }
 

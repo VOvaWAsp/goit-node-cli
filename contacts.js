@@ -1,4 +1,5 @@
 import {promises as fs} from "fs"
+import { nanoid } from "nanoid";
 import path from "path"
 
 const contactsPath = path.join("db", "contacts.json");
@@ -33,7 +34,7 @@ export async function listContacts() {
   export async function addContact(name, email, phone) {
         const addJsonById = await fs.readFile(contactsPath);
         const get = JSON.parse(addJsonById)
-        const addJson = [ ...get, {id: Math.random(), name, email, phone} ];
+        const addJson = [ ...get, {id: nanoid(), name, email, phone} ];
         await fs.writeFile(contactsPath, JSON.stringify(addJson))
         return addJson
   }

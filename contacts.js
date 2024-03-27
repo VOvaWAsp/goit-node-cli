@@ -1,4 +1,5 @@
 import {promises as fs} from "fs"
+import { get } from "http";
 import { nanoid } from "nanoid";
 import path from "path"
 
@@ -22,20 +23,21 @@ export async function listContacts() {
   export async function removeContact(contactId) {
     const removeJsonById = await fs.readFile(contactsPath);
     const get = JSON.parse(removeJsonById)
-    const find = get.find((item) => item.id === contactId)
+    const find = get.findIndex((item) => item.id === contactId)
     if (!find) {
        return null
     }
-     const removed = get.filter((item) => item.id !== find);
-    await fs.writeFile(contactsPath, JSON.stringify(removed))
+    const removed = get.splice(find, 1)[0];
+    await fs.writeFile(contactsPath, JSON.stringify(get))
     return removed;
   }
   
   export async function addContact(name, email, phone) {
         const addJsonById = await fs.readFile(contactsPath);
         const get = JSON.parse(addJsonById)
-        const addJson = [ ...get, {id: nanoid(), name, email, phone} ];
-        await fs.writeFile(contactsPath, JSON.stringify(addJson))
+        const addJson = {id: nanoid(), name, email, phone};
+        const updateJson = [...get, addJson];
+        await fs.writeFile(contactsPath, JSON.stringify(updateJson))
         return addJson
   }
 

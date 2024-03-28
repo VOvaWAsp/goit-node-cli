@@ -24,7 +24,7 @@ export async function listContacts() {
     const removeJsonById = await fs.readFile(contactsPath);
     const get = JSON.parse(removeJsonById)
     const find = get.findIndex((item) => item.id === contactId)
-    if (!find) {
+    if (find === -1) {
        return null
     }
     const removed = get.splice(find, 1)[0];
